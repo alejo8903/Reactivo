@@ -18,7 +18,8 @@ public class BankAccount {
     // TODO 1: Implementar getTotalBalance utilizando streams y reduce
     public Optional<Double> getTotalBalance() {
         return transactions.stream()
-                .map(transaction -> transaction.getAmount()).reduce(Double::sum);
+                .map(transaction -> transaction.getType().equals("deposit") ? transaction.getAmount() : -transaction.getAmount())
+                .reduce(Double::sum);
 
     }
 
@@ -70,7 +71,7 @@ public class BankAccount {
                 transactions.stream()
                         .filter(transaction -> transaction.getDate().equals(date))
                         .collect(Collectors.toList())
-        ).filter(list -> !list.isEmpty()); .
+        ).filter(list -> !list.isEmpty());
 
     }
 
