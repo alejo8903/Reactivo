@@ -1,0 +1,8 @@
+pluginManagement {
+    repositories {
+        //gradlePluginPortal()
+        //mavenCentral()
+        maven { url 'https://artifactory.apps.bancolombia.com/maven-bancolombia' }
+    }
+}
+rootProject.name = 'tallerbancodigital'
