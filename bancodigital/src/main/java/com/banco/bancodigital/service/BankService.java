@@ -97,18 +97,19 @@ public class BankService {
     public Mono<String> closeAccount(String accountId) {
         // Caso de uso: Cerrar una cuenta bancaria especificada. Verificar que la ceunta exista y si no existe debe retornar un error controlado
         return accountRepository.findById(accountId)
-                .map(account -> {
-                    accountRepository.delete(account);
-                    return "Account with ID " + accountId + " has been closed.";
-                });
+                .flatMap(account ->
+                    accountRepository.delete(account).thenReturn(
+                            "Account with ID " + accountId + " has been closed.")
+                ).switchIfEmpty(Mono.just("Account not found with ID " + accountId));
         // Implementar la lógica de consulta aquí
     }
 
     public Mono<String> updateAccount(UpdateAccountRequest request) {
         // Caso de uso: Actualizar la información de una cuenta bancaria especificada. Verificar que la ceunta exista y si no existe debe retornar un error controlado
+
         return accountRepository.findById(request.getAccountId())
                 .flatMap(account -> {
-                    account.setBalance(Double.parseDouble(request.getNewData()));
+                    account.setBalance(Double.parseDouble(request.getNewData().trim()));
                     return accountRepository.save(account)
                             .then(Mono.just("Account updated successfully"));
                 })
@@ -145,7 +146,7 @@ public class BankService {
                 account -> {
                     List<Double> interest = new ArrayList<>();
                     for (int i = 1; i <= 10; i++) {
-                        interest.add(principal * Math.pow(1 + rate, i));
+                        interest.add( principal * Math.pow(1 + rate, i));
                     }
                     return Flux.fromIterable(interest);
                 }

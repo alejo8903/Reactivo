@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Data
 @Document(collection = "transactions")
 public class Transaction {
+    @MongoId
     private String transactionId;
     private String accountId;
     private Double amount;
